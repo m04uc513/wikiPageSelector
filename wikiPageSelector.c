@@ -166,7 +166,7 @@ int tlcnt = 0;
 int
 ScanWikiData(const char *wikipage)
 {
-  printf("# wikipage: %s\n", wikipage); fflush(stdout);
+  //printf("# wikipage: %s\n", wikipage); fflush(stdout);
   int i;
 #if 0
   for (i = 0; i < nuniqs; i++) {

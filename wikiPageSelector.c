@@ -105,13 +105,6 @@ ReadTriplets(const char *triplets)
     uniqs[++n] = words[i];
   }
   nuniqs = n;
-#if 0
-  for (i = 0; i < nuniqs; i++) {
-    printf("%d: %s\n", i, uniqs[i]);
-  }    
-  printf("nuniqs: %d\n", nuniqs);
-  printf("----------\n");
-#endif  
   return(0);
 }
 
@@ -168,13 +161,6 @@ ScanWikiData(const char *wikipage)
 {
   //printf("# wikipage: %s\n", wikipage); fflush(stdout);
   int i;
-#if 0
-  for (i = 0; i < nuniqs; i++) {
-    printf("%d: %s\n", i, uniqs[i]);
-  }    
-  printf("nuniqs: %d\n", nuniqs);
-  printf("----------\n");
-#endif  
   FILE *fp = fopen(wikipage, "r");
   if (fp == NULL) {
     printf("%d -- %s\n", errno, strerror(errno));
@@ -235,7 +221,21 @@ ScanWikiData(const char *wikipage)
 int
 main(int argc, const char * argv[])
 {
-  ReadTriplets(argv[1]);
+  char *wbuff;
+  if (strncmp(argv[1], "http://",  7) == 0 ||
+      strncmp(argv[1], "https://", 8) == 0) {
+    char *o, *p, *q;
+    wbuff = malloc(256);
+    bzero(wbuff, 256);
+    for (p = o = (char *) argv[1]; *p != '\0'; p++) {}
+    for (q = p; *q != '/'; q--){} q++;
+    decode_uri(q, wbuff);
+    uniqs = (char **) calloc(1, sizeof(char *));
+    uniqs[0] = wbuff;
+    nuniqs = 1;
+  } else {
+    ReadTriplets(argv[1]);
+  }
   ScanWikiData(argv[2]);
   exit(0);
 }
